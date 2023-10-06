@@ -11,7 +11,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/createtask/:id" element={<CreateTask />} />
-        <Route path="/createtask" element={<CreateTask />} />
+        <Route path="/createtask" element={<CreateTask createMode={true} />} />
       </Routes>
     </BrowserRouter>
   );

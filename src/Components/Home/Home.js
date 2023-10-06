@@ -5,7 +5,7 @@ import "./Home.css";
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
-  
+
   const getTasks = async () => {
     try {
       const request = await fetch("http://localhost:8000/tasks");
@@ -45,7 +45,7 @@ const Home = () => {
                       {task.status}
                     </Card.Text>
                     <Card.Link>
-                      <Link to={`/tasks/${task.id}`}>
+                      <Link to={`/createtask/${task.id}`}>
                         <i class="bi bi-pencil-square"></i>
                       </Link>
                     </Card.Link>

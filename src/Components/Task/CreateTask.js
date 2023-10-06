@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 
-const CreateTask = () => {
+const CreateTask = ({ createMode }) => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskBody, setTaskBody] = useState("");
   const [taskStatus, setTaskStatus] = useState("Todo");
   const navigate = useNavigate();
   const params = useParams();
 
-  const getTasks = async () => {
+  const getCurrentTasks = async () => {
     const request = await fetch(`http://localhost:8000/tasks/${params.id}`);
     const requestToJson = await request.json();
     setTaskTitle(requestToJson.title);
@@ -21,10 +21,18 @@ const CreateTask = () => {
 
   useEffect(() => {
     if (params.id) {
-      getTasks();
+      getCurrentTasks();
     }
     return () => {};
   }, []);
+
+  useEffect(() => {
+    return () => {
+      setTaskTitle("");
+      setTaskBody("");
+      setTaskStatus("");
+    };
+  }, [createMode]);
 
   const createTask = async () => {
     const TaskModel = {
