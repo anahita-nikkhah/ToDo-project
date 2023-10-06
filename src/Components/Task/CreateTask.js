@@ -2,13 +2,29 @@ import Form from "react-bootstrap/Form";
 import "./CreateTask.css";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const CreateTask = () => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskBody, setTaskBody] = useState("");
   const [taskStatus, setTaskStatus] = useState("Todo");
   const navigate = useNavigate();
+  const params = useParams();
+
+  const getTasks = async () => {
+    const request = await fetch(`http://localhost:8000/tasks/${params.id}`);
+    const requestToJson = await request.json();
+    setTaskTitle(requestToJson.title);
+    setTaskBody(requestToJson.content);
+    setTaskStatus(requestToJson.status);
+  };
+
+  useEffect(() => {
+    if (params.id) {
+      getTasks();
+    }
+    return () => {};
+  }, []);
 
   const createTask = async () => {
     const TaskModel = {
@@ -32,12 +48,29 @@ const CreateTask = () => {
     setTaskBody("");
     setTaskStatus("Todo");
   };
+  const updateTask = async () => {
+    const TaskModel = {
+      title: taskTitle,
+      content: taskBody,
+      status: taskStatus,
+    };
+    try {
+      await fetch(`http://localhost:8000/tasks/${params.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(TaskModel),
+      });
+      navigate("/");
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
   return (
     <>
       <div class="container mt-3">
         <div className="row ">
           <div className="col-6 offset-3 ">
-            <h2>Tasks</h2>
+            <h2>{params.id ? "Edit Task" : "Create Task"}</h2>
             <label for="comment">title:</label>
             <form action="">
               <div class="mb-3 mt-3">
@@ -74,10 +107,10 @@ const CreateTask = () => {
               </div>
               <button
                 type="button"
-                onClick={createTask}
+                onClick={params.id ? updateTask : createTask}
                 class="btn btn-primary"
               >
-                Add
+                {params.id ? "Edit" : "Create"}
               </button>
             </form>
           </div>

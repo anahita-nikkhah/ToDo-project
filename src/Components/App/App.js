@@ -4,14 +4,14 @@ import Home from "../Home/Home";
 import CreateTask from "../Task/CreateTask";
 import Delete from "../Task/Delete";
 
-
 const App = () => {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/CreateTask" element={<CreateTask />} />
+        <Route path="/createtask/:id" element={<CreateTask />} />
+        <Route path="/createtask" element={<CreateTask />} />
       </Routes>
     </BrowserRouter>
   );
